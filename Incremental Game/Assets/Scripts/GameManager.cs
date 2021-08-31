@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
         }
 
         CheckResourceCost();
+        CheckGoldAchievement();
 
         CoinIcon.transform.localScale = Vector3.LerpUnclamped(CoinIcon.transform.localScale, Vector3.one * 2f, 0.15f);
         CoinIcon.transform.Rotate(0f, 0f, Time.deltaTime * -100f);
@@ -170,6 +171,20 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void CheckGoldAchievement()
+    {
+        List<int> _milestoneAchieved = new List<int>();
+        foreach (int value in AchievementController.Instance.GoldMilestones)
+        {
+            if(_totalGold >= value)
+            {
+                AchievementController.Instance.UnlockAchievement(AchievementType.GetGoldAmount, $"{ value }");
+                _milestoneAchieved.Add(value);
+            }
+        }
+        AchievementController.Instance.RemoveGoldMilestones(_milestoneAchieved);
     }
 }
 

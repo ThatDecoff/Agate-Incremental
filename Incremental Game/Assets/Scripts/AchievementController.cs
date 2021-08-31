@@ -18,12 +18,32 @@ public class AchievementController : MonoBehaviour
         }
     }
 
+    private List<int> _goldMilestones = new List<int>();
+    public List<int> GoldMilestones
+    {
+        get
+        {
+            return _goldMilestones;
+        }
+    }
+
     [SerializeField] private Transform _popUpTransform;
     [SerializeField] private Text _popUpText;
     [SerializeField] private float _popUpShowDuration = 3f;
     [SerializeField] private List<AchievementData> _achievementList;
 
     private float _popUpShowDurationCounter;
+
+    private void Awake()
+    {
+        foreach(AchievementData achievement in _achievementList)
+        {
+            if(achievement.Type == AchievementType.GetGoldAmount)
+            {
+                _goldMilestones.Add(int.Parse(achievement.Value));
+            }
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -47,6 +67,17 @@ public class AchievementController : MonoBehaviour
             achievement.IsUnlocked = true;
 
             ShowAchivementPopUp(achievement);
+        }
+    }
+
+    public void RemoveGoldMilestones(List<int> milestones)
+    {
+        foreach(int value in milestones)
+        {
+            if (_goldMilestones.Contains(value))
+            {
+                _goldMilestones.Remove(value);
+            }
         }
     }
 
@@ -74,5 +105,6 @@ public class AchievementData
 
 public enum AchievementType
 {
-    UnlockResource
+    UnlockResource,
+    GetGoldAmount
 }
